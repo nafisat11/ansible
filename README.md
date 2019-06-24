@@ -1,1 +1,1 @@
-# hello-world-daemon
+# Retrieving network device information
