@@ -1,0 +1,21 @@
+---
+- name: Current Status of IEP1
+  hosts: servers
+  tasks:
+    - shell: ip link
+      register: ip_link_result
+
+    - shell: free -h
+      register: mem_result
+
+    - shell: df -h --output=source,size,used,avail
+      register: disk_result
+
+    - name: Display network interfaces
+      debug: var=ip_link_result.stdout_lines
+
+    - name: Display memory usage
+      debug: var=mem_result.stdout_lines
+
+    - name: Display disk usage
+      debug: var=disk_result.stdout_lines
