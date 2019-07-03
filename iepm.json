@@ -1,0 +1,596 @@
+{
+	"Network":{
+		"Configuration Mode": [
+			"Manually Edited", 
+			"Auto-Generated"
+		],
+		"Identity":{
+			"Device":{
+				"Hostname": ""
+			}
+		},
+
+		"Rajant":{
+			"General Settings":{
+				"Endpoint Interface Settings":{
+					"IP Settings": [
+						"dhcp", 
+						"manual", 
+						"static"
+					],
+					"Static IP": "",
+					"Static Netmask": "",
+					"Static Gateway": "",
+					"Additional Routes": []
+				},
+
+				"BreadCrumb Interface Settings":{
+					"IP Settings": [
+						"computed_v11", 
+						"computed_v10", 
+						"manually asigned", 
+						"dhcp"
+					],
+					"Static IP": "",
+					"Static Netmask": "8.32.242.191",
+					"Static Gateway": "200.3.19.8"
+				}
+			},
+
+			"Network Settings":{
+				"Security":{
+					"Instamesh Network Name": "",
+					"Network Key": "",
+					"Confirm Network Key": ""
+				}
+			},
+
+			"5GHz Radio":{
+				"5GHz Settings":{
+					"Channel": [
+						36, 40, 44, 48, 52, 56, 
+						60, 64, 100, 104, 108, 112, 
+						116, 120, 124, 128, 132, 136,
+						140, 149, 153, 157, 161, 165
+					]
+				}
+			},
+
+			"2.4GHz Radio":{
+				"2.4GHz Settings":{
+					"Channel": [
+						1, 2, 3, 4, 5, 6, 7,
+						8, 9, 10, 11, 12, 13, 14
+					]
+				}
+			}
+		},
+
+		"WLAN":{
+			"General Settings":{
+				"General Settings":{
+					"Regulatory Domain": [
+						"Australia",
+						"Brazil",
+						"Canada",
+						"Colombia",
+						"Indonesia",
+						"Mexico",
+						"Peru",
+						"South Africa",
+						"Sweden",
+						"United States",
+						"World Roaming"
+					]
+				}
+			},
+
+			"wlan0 or ath0":{
+				"Interface Type": [
+					"access-point",
+					"disabled",
+					"subscriber"
+				],
+				"Maximum Transmit Power": [
+					"06 dBm", "07 dBm", "08 dBm", "09 dBm", "10 dBm", "11 dBm",
+					"12 dBm", "13 dBm", "14 dBm", "15 dBm", "16 dBm", "17 dBm",
+					"18 dBm", "19 dBm", "20 dBm", "21 dBm", "22 dBm", "23 dBm", 
+					"24 dBm"
+				],
+				"Roaming Thresholds": "-85:1 -80:2 -75:3 -70:4",
+				"Roaming Thresholds Ceiling": 20,
+				"Access Point (wlan0 or ath0)":{
+					"SSID": "",
+					"802.11 Mode": [
+						"802.11a",
+						"802.11b",
+						"802.11g",
+						"802.11n"
+					],
+					"Channel": [
+						"001", "002", "003", "004", "005", "006",
+						"007", "008", "009", "010", "011", "012",
+						"013", "036", "040", "044", "048", "052",
+						"056", "060", "064", "100", "104", "108",
+						"112", "116", "136", "140", "149", "153",
+						"157", "161", "165"
+					],
+					"Channel Bond": [
+						"Down",
+						"None",
+						"Up"
+					],
+					"Security Mode": [
+						"WEP",
+						"WPA (Mixed)",
+						"WPA2 (Only)",
+						"open"
+					],
+					"WEP Key": "",
+					"WPA2 Passphrase": "",
+					"IP Settings": [
+						"dhcp",
+						"manual",
+						"static"
+					],
+					"Static IP": "",
+					"Static Netmask": "",
+					"Static Gateway": ""
+				},
+
+				"Subscriber (wlan0 or ath0)":{
+					"SSID": "",
+					"SSID is Hidden": [
+						"Yes",
+						"No"
+					],
+					"Channel": [
+						"001", "002", "003", "004", "005", "006",
+						"007", "008", "009", "010", "011", "012",
+						"013", "036", "040", "044", "048", "052",
+						"056", "060", "064", "100", "104", "108",
+						"112", "116", "136", "140", "149", "153",
+						"157", "161", "165" 
+					],
+					"IP Settings": [
+						"dhcp",
+						"manual",
+						"static"
+					],
+					"Static IP": "",
+					"Static Netmask": "",
+					"Static Gateway": "",
+					"Security Mode": [
+						"WEP",
+						"WPA (Mixed)",
+						"WPA2 (Only)"
+					],
+					"WEP Key": "",
+					"WPA2 Passphrase": "",
+					"Fast BSS Transition (802.11r)": [
+						"Disabled",
+						"Enabled"
+					],
+					"Signal Threshold": -75,
+					"Interval Below Threshold": 3,
+					"Interval Above Threshold": 15
+				}
+
+			},
+
+			"wlan1":{
+				"Interface Type": [
+					"access-point",
+					"disabled",
+					"subscriber"
+				],
+				"Maximum Transmit Power": [
+					"06 dBm", "07 dBm", "08 dBm", "09 dBm", "10 dBm", "11 dBm",
+					"12 dBm", "13 dBm", "14 dBm", "15 dBm", "16 dBm", "17 dBm",
+					"18 dBm", "19 dBm", "20 dBm", "21 dBm", "22 dBm", "23 dBm",
+					"24 dBm"
+				],
+				"Roaming Thresholds": "-85:1 -80:2 -75:3 -70:4",
+				"Roaming Thresholds Ceiling": 20,
+				"Access Point (wlan1)":{
+					"SSID": "",
+					"802.11 Mode": [
+						"802.11a",
+						"802.11b",
+						"802.11g",
+						"802.11n"
+					],
+					"Channel": [
+						"001", "002", "003", "004", "005", "006",
+						"007", "008", "009", "010", "011", "012",
+						"013", "036", "040", "044", "048", "052",
+						"056", "060", "064", "100", "104", "108",
+						"112", "116", "136", "140", "149", "153",
+						"157", "161", "165" 
+					],
+					"Channel Bond": [
+						"Down",
+						"None",
+						"Up"
+					],
+					"Security Mode": [
+						"WEP",
+						"WPA (Mixed)",
+						"WPA2 (Only)"
+					],
+					"WEP Key": "",
+					"WPA2 Passphrase": "",
+					"IP Settings": [
+						"dhcp",
+						"manual",
+						"static"
+					],
+					"Static IP": "",
+					"Static Netmask": "",
+					"Static Gateway": ""
+				},
+
+				"Subscriber (wlan1)":{
+					"SSID": "",
+					"SSID is Hidden": [
+						"Yes",
+						"No"
+					],
+					"Channel": [
+						"001", "002", "003", "004", "005", "006",
+						"007", "008", "009", "010", "011", "012",
+						"013", "036", "040", "044", "048", "052",
+						"056", "060", "064", "100", "104", "108",
+						"112", "116", "136", "140", "149", "153",
+						"157", "161", "165" 
+					],
+					"IP Settings": [
+						"dhcp",
+						"manual",
+						"static"
+					],
+					"Static IP": "",
+					"Static Netmask": "",
+					"Static Gateway": "",
+					"Security Mode": [
+						"WEP",
+						"WPA (Mixed)",
+						"WPA2 (Only)"
+					],
+					"WEP Key": "",
+					"WPA2 Passphrase": "",
+					"Fast BSS Transition (802.11r)": [
+						"Disabled",
+						"Enabled"
+					],
+					"Signal Threshold": -75,
+					"Interval Below Threshold": 3,
+					"Interval Above Threshold": 15
+				}
+			}
+
+		},
+
+		"MEA":{
+			"Network Interface":{
+				"IP Settings": [
+						"dhcp",
+						"manual",
+						"static"
+				],
+				"Static IP": "",
+				"Static Netmask": "",
+				"Static Gateway": ""
+			},
+
+			"Host Settings":{
+				"IP Mode": [
+					"network",
+					"spoof"
+				],
+				"Spoofed IP": "",
+				"Spoofed Mode Netmask": "",
+				"Spoofed Mode Gateway": "",
+				"Spoofed Mode DNS Server": ""
+			},
+
+			"Transceiver Settings":{
+				"IP Mode": [
+					"network",
+					"spoof"
+				],
+				"Spoofed IP": "",
+				"Spoofed Mode Netmask": "",
+				"Spoofed Mode Gateway": "",
+				"Spoofed Mode DNS Server": "",
+				"Access Point": [
+					"No",
+					"Yes"
+				],
+				"Mobility Mode": [
+					"On",
+					"Off"
+				],
+				"Spread Code": [
+					"00", "01", "02", "03", "04", "05",
+					"06", "07", "08", "09", "10", "11",
+					"12", "14", "15", "16"
+				],
+				"MEA Security": [
+					"open",
+					"psk"
+				],
+				"PSK-HEX": "",
+				"Mesh Discrimination": [
+					"Off",
+					"On"
+				],
+				"Mesh ID": "",
+				"VLAN Strip": [
+					"Off",
+					"On"
+				],
+				"Control Channel": [
+					"2.41GHz",
+					"2.43GHz",
+					"2.45GHz",
+					"2.47GHz",
+					"Off"
+				],
+				"Data Channel 1": [
+					"2.41GHz",
+					"2.43GHz",
+					"2.45GHz",
+					"2.47GHz",
+					"Off"
+				],
+				"Data Channel 2": [
+					"2.41GHz",
+					"2.43GHz",
+					"2.45GHz",
+					"2.47GHz",
+					"Off"
+				],
+				"Data Channel 3": [
+					"2.41GHz",
+					"2.43GHz",
+					"2.45GHz",
+					"2.47GHz",
+					"Off"
+				]
+			}
+		},
+
+		"Ethernet":{
+			"eth0":{
+				"IP Settings": [
+						"dhcp",
+						"manual",
+						"static"
+				],
+				"Static IP": "",
+				"Static Netmask": "",
+				"Static Gateway": "",
+				"Additional Routes": ""
+			},
+
+			"eth1":{
+				"IP Settings": [
+						"dhcp",
+						"manual",
+						"static"
+				],
+				"Static IP": "",
+				"Static Netmask": "",
+				"Static Gateway": "",
+				"Additional Routes": "" 
+			},
+
+			"eth2":{
+				"IP Settings": [
+						"dhcp",
+						"manual",
+						"static"
+				],
+				"Static IP": "",
+				"Static Netmask": "",
+				"Static Gateway": "",
+				"Additional Routes": "" 
+			},
+
+			"eth3":{
+				"IP Settings": [
+						"dhcp",
+						"manual",
+						"static"
+				],
+				"Static IP": "",
+				"Static Netmask": "",
+				"Static Gateway": "",
+				"Additional Routes": "" 
+			}
+		},
+
+		"Bridge":{
+			"br0":{
+				"Interfaces to Bridge": [
+					"ath0", "eth0", "eth1", "eth2",
+					"eth3", "mea0", "vlan A", "vlan B",
+					"vlan C", "vlan D", "wlan0", "wlan1"
+				],
+				"IP Settings": [
+						"dhcp",
+						"manual",
+						"static"
+				],
+				"Static IP": "",
+				"Static Netmask": "",
+				"Static Gateway": "",
+				"Additional Routes": "",
+				"Connected Device(s)": "",
+				"Enable Learning Mode": [
+					"no",
+					"yes"
+				]
+			},
+
+			"br1":{
+				"Interfaces to Bridge": [
+					"ath0", "eth0", "eth1", "eth2",
+					"eth3", "mea0", "vlan A", "vlan B",
+					"vlan C", "vlan D", "wlan0", "wlan1"
+				],
+				"IP Settings": [
+						"dhcp",
+						"manual",
+						"static"
+				],
+				"Static IP": "",
+				"Static Netmask": "",
+				"Static Gateway": "",
+				"Additional Routes": "",
+				"Connected Device(s)": "",
+				"Enable Learning Mode": [
+					"no",
+					"yes"
+				]
+			},
+
+			"br2":{
+				"Interfaces to Bridge": [
+					"ath0", "eth0", "eth1", "eth2",
+					"eth3", "mea0", "vlan A", "vlan B",
+					"vlan C", "vlan D", "wlan0", "wlan1"
+				],
+				"IP Settings": [
+						"dhcp",
+						"manual",
+						"static"
+				],
+				"Static IP": "",
+				"Static Netmask": "",
+				"Static Gateway": "",
+				"Additional Routes": "",
+				"Connected Device(s)": "",
+				"Enable Learning Mode": [
+					"no",
+					"yes"
+				]
+			},
+
+			"br3":{
+				"Interfaces to Bridge": [
+					"ath0", "eth0", "eth1", "eth2",
+					"eth3", "mea0", "vlan A", "vlan B",
+					"vlan C", "vlan D", "wlan0", "wlan1"
+				],
+				"IP Settings": [
+						"dhcp",
+						"manual",
+						"static"
+				],
+				"Static IP": "",
+				"Static Netmask": "",
+				"Static Gateway": "",
+				"Additional Routes": "",
+				"Connected Device(s)": "",
+				"Enable Learning Mode": [
+					"no",
+					"yes"
+				]
+			}
+		},
+
+		"VLAN":{
+			"VLAN Option A":{
+				"Interfaces with VLAN Traffic": [
+					"ath0", "eth0", "eth1", "eth2",
+					"eth3", "mea0", "vlan A", "vlan B",
+					"vlan C", "vlan D", "wlan0", "wlan1", "Disabled"
+				],
+				"VLAN ID": -1,
+				"IP Settings": [
+						"dhcp",
+						"manual",
+						"static"
+				],
+				"Static IP": "",
+				"Static Netmask": "",
+				"Static Gateway": "",
+				"Additional Routes": ""
+			},
+
+			"VLAN Option B":{
+				"Interfaces with VLAN Traffic": [
+					"ath0", "eth0", "eth1", "eth2",
+					"eth3", "mea0", "vlan A", "vlan B",
+					"vlan C", "vlan D", "wlan0", "wlan1", "Disabled"
+				],
+				"VLAN ID": -1,
+				"IP Settings": [
+						"dhcp",
+						"manual",
+						"static"
+				],
+				"Static IP": "",
+				"Static Netmask": "",
+				"Static Gateway": "",
+				"Additional Routes": ""
+			},
+
+			"VLAN Option C":{
+				"Interfaces with VLAN Traffic": [
+					"ath0", "eth0", "eth1", "eth2",
+					"eth3", "mea0", "vlan A", "vlan B",
+					"vlan C", "vlan D", "wlan0", "wlan1", "Disabled"
+				],
+				"VLAN ID": -1,
+				"IP Settings": [
+						"dhcp",
+						"manual",
+						"static"
+				],
+				"Static IP": "",
+				"Static Netmask": "",
+				"Static Gateway": "",
+				"Additional Routes": ""
+			},
+
+			"VLAN Option D":{
+				"Interfaces with VLAN Traffic": [
+					"ath0", "eth0", "eth1", "eth2",
+					"eth3", "mea0", "vlan A", "vlan B",
+					"vlan C", "vlan D", "wlan0", "wlan1", "Disabled"
+				],
+				"VLAN ID": -1,
+				"IP Settings": [
+						"dhcp",
+						"manual",
+						"static"
+				],
+				"Static IP": "",
+				"Static Netmask": "",
+				"Static Gateway": "",
+				"Additional Routes": ""
+			}
+		},
+
+		"Monitor Network Status":{
+			"Network Status IP": "127.0.0.1"
+		},
+
+		"Advanced Customizations":{
+			"Network Interfaces": "",
+			"Wlan0 802.11 Subscriber": "",
+			"Wlan1 802.11 Subscriber": "",
+			"802.11 Access Point": "",
+			"DNS": "",
+			"Central Regulatory Domain Agent": ""
+		},
+
+		"General Info":{
+			"Network Devices": "",
+			"Auto-Discovered Traffic Sources": ""	
+		}
+	}	
+}
