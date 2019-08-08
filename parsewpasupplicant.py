@@ -1,65 +1,16 @@
-import more_itertools as m_iter
-from collections import defaultdict
 from itertools import chain
 from pprint import pprint as pp
 
 
 def main():
-    wpa = {}
-    key_list = []
-    val_list = []
-    
-    with open("wpa_supplicant.conf", "r") as wpa_conf:
-        for line in wpa_conf:
-            if "#" in line:
-                line = line.split("#")
-            if '=' in line:
-                key, value = line.split('=', 1)
-                key = key.strip()
-                value = value.strip()
-                #key_list.append(key)
-                #val_list.append(value)
-
-                key_list.append(key)
-                val_list.append(value)
-                dup_key = [i for i, x in enumerate(key_list) if x == 'network']
-                dup_val = [i for i, x in enumerate(val_list) if x == '{']
-                temp1 = zip(chain([0], dup_key), chain(dup_key, [None]))
-                temp2 = zip(chain([0], dup_val), chain(dup_val, [None]))
-                new_keys = [key_list[i:j] for i, j in temp1]
-                new_vals = [val_list[i:j] for i, j in temp2]
-    
-        print(list(zip(new_keys,new_vals)))
-
-def test():
     with open("wpa_supplicant.conf") as wpa_conf:
-        vals = ("autoscan", "network", " ")
-        tmp = []
-        for line in wpa_conf:
-            line = line.strip()
-            if line.startswith(vals):
-                yield tmp
-                tmp = [line]
-            else:
-                if not "#" in line:
-                    line = line.lstrip()                  
-                    tmp.append(line)
-
-    if tmp:
-        yield tmp
-
-def test2():
-    with open("wpa_supplicant.conf") as wpa_conf, open("output.txt", "w+") as outfile:
-        d = defaultdict(list)
         globs = []
-        network_keys = []
-        network_vals = []
-        tmp = []
+        network_kv = []
         flag = 1
         for line in wpa_conf:
             if not line.strip():
                 continue
-            if not "#" in line:
+            if "#" not in line:
                 line = line.strip()
                 if line.startswith("network"):
                     flag = 0
@@ -72,71 +23,54 @@ def test2():
 
                 if not flag and not line.startswith("network"):
                     key = line.strip().split("=")
-                    network_keys.append(key)
-        #print(network_keys)
-                    #network_vals.append(value)
-
-        #network_keys[network_keys.index("psk")] = "psk_text"
+                    network_kv.append(key)
 
         wpa = dict(tuple(globs))
-        #print(wpa)
-    
 
-        dups = [i for i, x in enumerate(network_keys) if x[0] == "ssid"]
+        dups = [i for i, x in enumerate(network_kv) if x[0] == "ssid"]
         dups.remove(0)
-        keys = [tuple(network_keys[i:j]) for i, j in zip(chain([None], dups), chain(dups, [None]))]
-        #vals = tuple([tuple(network_vals[i:j]) for i, j in zip(chain([None], dups), chain(dups, [None]))])
 
         g = globals()
-        
+
+        num_of_lists = list(map(lambda x: x, range(len(dups) + 1)))
+        iterator = iter(num_of_lists)
+
         for i, j in zip(chain([None], dups), chain(dups, [None])):
-            g['net_{0}'.format(i)] = network_keys[i:j]
+            g["net_{0}".format(next(iterator))] = network_kv[i:j]
 
-        net_0 = []
-        counter = 0
-        for i, v in enumerate(net_None):
-            if net_None[i][0].count("psk"):
-                count = net_None
-            #total = net_None.count()
+        for i, v in enumerate(net_0):
+            if net_0[i][0] == "psk":
+                if '"' not in net_0[i][1]:
+                    net_0[i][0] = "psk_hash"
+                else:
+                    net_0[i][0] = "psk_text"
 
+        for i, v in enumerate(net_1):
+            if net_1[i][0] == "psk":
+                if '"' not in net_1[i][1]:
+                    net_1[i][0] = "psk_hash"
+                else:
+                    net_1[i][0] = "psk_text"
 
-        wpa.update(net0=dict(net_None))
-        #pp(wpa)
+        for i, v in enumerate(net_2):
+            if net_2[i][0] == "psk":
+                if '"' not in net_2[i][1]:
+                    net_2[i][0] = "psk_hash"
+                else:
+                    net_2[i][0] = "psk_text"
 
+        for i, v in enumerate(net_3):
+            if net_3[i][0] == "psk":
+                if '"' not in net_3[i][1]:
+                    net_3[i][0] = "psk_hash"
+                else:
+                    net_3[i][0] = "psk_text"
 
-            
+        net = [dict(net_0), dict(net_1), dict(net_2), dict(net_3)]
 
-        
-
-
-                
-
-def test3():
-    with open("wpa_supplicant.conf") as wpa_conf:
-        tmp = []
-        d = defaultdict(list)
-        for line in wpa_conf:
-            if not line.strip():
-                continue
-            if not "#" in line:
-                line = line.strip()
-                tmp.append(line)
-
-        dups = [i for i, x in enumerate(tmp) if "network" in x]
-        key_val = [tmp[i:j] for i, j in zip(chain([0], dups), chain(dups, [None]))]
-        pp(key_val)
-
-        for i in key_val:
-            for j in i:
-                j = j.split("=")
-                #print(j)
+        wpa.update(network=net)
+        pp(wpa)
 
 
-
-
-
-if __name__ == '__main__':
-    #main()
-    #print(list(test()))
-    test2()
-    #test3()
+if __name__ == "__main__":
+    main()
