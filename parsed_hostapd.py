@@ -1,5 +1,6 @@
 from hostapdconf.parser import HostapdConf
 from collections import OrderedDict
+import json
 
 def main():
     ap_settings = {}
@@ -12,11 +13,9 @@ def main():
                 key = key.strip()
                 value = value.strip()
                 ap_settings[key] = value
-        
-        ordered = OrderedDict(ap_settings) 
-    
-    print(ordered)
 
+    with open("parsed_hostapd.json", "w") as json_file:
+        json.dump(ap_settings, json_file, indent=4, separators=(',', ': '))
 
 
 if __name__ == '__main__':
