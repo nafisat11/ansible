@@ -1,0 +1,20 @@
+- hosts: all
+  tasks:
+    - name: test stack
+      file:
+        path: /root/ansible-test123456
+        state: touch
+        owner: root
+        group: sys
+        mode: 0644
+        
+    - name: test upload
+      copy:
+        #Any files uploaded through the API (as through queue.py) will be placed
+        #in {{ ce__local_blob_path }} on the host until this playbook is no
+        #longer needed.
+        #If dealing with large files, scp them to the server instead.
+        src: "{{ ce__local_blob_path }}/testfile.py"
+        dest: /root/testfile2.py
+        mode: 0755
+        

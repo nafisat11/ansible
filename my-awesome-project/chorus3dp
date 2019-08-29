@@ -1,0 +1,44 @@
+#!/usr/bin/python3
+import json
+import logging
+_logger = logging.getLogger('')
+
+import tornado.httpserver
+import tornado.ioloop
+import tornado.web
+
+import libchorus3dp.config
+try:
+    config = json.loads(open('/etc/3d-p/chorus3dp/chorus3dp.json').read())
+except IOError:
+    config = json.loads(open('./sample/chorus3dp.json').read())
+libchorus3dp.config.init(config)
+
+import libchorus3dp.admin
+import libchorus3dp.api
+import libchorus3dp.query
+
+http_server = tornado.httpserver.HTTPServer(tornado.web.Application(
+    handlers=[
+        (r'/load-single', libchorus3dp.api.LoadInstructionsSingleHandler),
+        (r'/load-multi', libchorus3dp.api.LoadInstructionsHandler),
+        
+        (r'/pause', libchorus3dp.admin.PauseExecutionHandler),
+        (r'/restart', libchorus3dp.admin.RestartExecutionHandler),
+        (r'/list', libchorus3dp.admin.ListInstructionsHandler),
+        (r'/remove-single', libchorus3dp.admin.RemoveSingleInstructionsHandler),
+        (r'/remove-multi', libchorus3dp.admin.RemoveInstructionsHandler),
+        (r'/remove-host', libchorus3dp.admin.RemoveHostHandler),
+    ],
+    compress_response=True,
+    xheaders=True,
+    debug=config['service']['debug'],
+))
+http_server.listen(
+    port=config['service']['port'],
+    address=config['service']['address'],
+)
+
+del config
+
+tornado.ioloop.IOLoop.current().start()
