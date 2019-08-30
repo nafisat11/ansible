@@ -12,6 +12,7 @@
       copy:
         content: "{{ thing_id }}\n"
         dest: "/etc/3d-p/thingybits/thing_id"
+        force: true
 
     - name: Make filesystem non-writeable
       command: ro
