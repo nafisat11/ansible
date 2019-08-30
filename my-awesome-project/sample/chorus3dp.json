@@ -1,0 +1,22 @@
+{
+    "logging": {
+        "console": {
+            "level": "debug"
+        },
+        "file": {
+            "path": "./chorus3dp.log",
+            "level": "debug",
+            "rotation_count": 3,
+            "rotation_size": 32768
+        }
+    },
+    "storage": {
+        "task_database": "/tmp/chorus3dp/tasks.sqlite3",
+        "task_filepath": "/tmp/chorus3dp/task-files/"
+    },
+    "service": {
+        "address": "",
+        "port": 46092,
+        "debug": true
+    }
+}
