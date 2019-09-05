@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright: (c) 2018, Terry Jones <terry.jones@example.org>
+# Copyright: (c) 2019, Nafisa Tabassum <nafisatabassum@3d-p.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 ANSIBLE_METADATA = {
@@ -12,9 +12,9 @@ ANSIBLE_METADATA = {
 
 DOCUMENTATION = '''
 ---
-module: my_test
+module: parse_interfaces
 
-short_description: This is my test module
+short_description: Parse an interfaces file
 
 version_added: "2.8"
 
@@ -22,58 +22,45 @@ description:
     - "This test module will simply"
 
 options:
-    name:
+    path:
         description:
-            - This is the message to send to the test module
+            - The interfaces file to parse.
+        type: path
         required: true
-    new:
-        description:
-            - Control to demo if the result of this module is changed or not
-        required: false
+        aliases: [ filename ]
 
 extends_documentation_fragment:
-    - azure
+    - files
 
 author:
-    - Nafisa Tabassum (nafisa.tabassum@3d-p.com)
+    - Nafisa Tabassum (nafisatabassum@3d-p.com)
 '''
 
 EXAMPLES = '''
-# Pass in a message
-- name: Test with a message
-  my_test:
-    name: hello world
-
-# pass in a message and have changed true
-- name: Test with a message and changed output
-  my_test:
-    name: hello world
-    new: true
-
-# fail the module
-- name: Test failure of the module
-  my_test:
-    name: fail me
+# Parse interfaces file
+- name: Parse interfaces file and return a JSON file
+  parse_interfaces:
+    path: interfaces
 '''
 
 RETURN = '''
-original_message:
-    description: The original name param that was passed in
-    type: str
-    returned: always
-message:
-    description: The output message that the test module generates
-    type: str
+json_file:
+    description: The JSON file that contains parsed key/value pairs the module generates
+    type: file
     returned: always
 '''
 
+import debinterface
+import json
+import os 
+import sys
+from collections import OrderedDict
 from ansible.module_utils.basic import AnsibleModule
 
 def run_module():
     # define available arguments/parameters a user can pass to the module
     module_args = dict(
-        name=dict(type='str', required=True),
-        new=dict(type='bool', required=False, default=False)
+        path=dict(type='path', required=True, aliases=['filename'])
     )
 
     # seed the result dict in the object
