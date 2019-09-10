@@ -44,7 +44,7 @@ EXAMPLES = '''
 '''
 
 RETURN = '''
-json_file:
+json:
     description: The JSON file that contains parsed key/value pairs the module generates
     type: file
     returned: always
@@ -57,60 +57,63 @@ import sys
 from collections import OrderedDict
 from ansible.module_utils.basic import AnsibleModule
 
-def run_module():
-    # define available arguments/parameters a user can pass to the module
-    module_args = dict(
-        path=dict(type='path', required=True, aliases=['filename'])
-    )
-
-    # seed the result dict in the object
-    # we primarily care about changed and state
-    # change is if this module effectively modified the target
-    # state will include any data that you want your module to pass back
-    # for consumption, for example, in a subsequent task
-    result = dict(
-        changed=False,
-        original_message='',
-        message=''
-    )
-
-    # the AnsibleModule object will be our abstraction working with Ansible
-    # this includes instantiation, a couple of common attr would be the
-    # args/params passed to the execution, as well as if the module
-    # supports check mode
-    module = AnsibleModule(
-        argument_spec=module_args,
-        supports_check_mode=True
-    )
-
-    # if the user is working with this module in only check mode we do not
-    # want to make any changes to the environment, just return the current
-    # state with no modifications
-    if module.check_mode:
-        module.exit_json(**result)
-
-    # manipulate or modify the state as needed (this is going to be the
-    # part where your module will do what it needs to do)
-    result['original_message'] = module.params['name']
-    result['message'] = 'goodbye'
-
-    # use whatever logic you need to determine whether or not this module
-    # made any modifications to your target
-    if module.params['new']:
-        result['changed'] = True
-
-    # during the execution of the module, if there is an exception or a
-    # conditional state that effectively causes a failure, run
-    # AnsibleModule.fail_json() to pass in the message and the result
-    if module.params['name'] == 'fail me':
-        module.fail_json(msg='You requested this to fail', **result)
-
-    # in the event of a successful module execution, you will want to
-    # simple AnsibleModule.exit_json(), passing the key/value results
-    module.exit_json(**result)
 
 def main():
-    run_module()
+    module = AnsibleModule(
+        argument_spec=dict(
+            path=dict(type='path', required=True, aliases=['filename']),
+            ),
+            supports_check_mode=True,
+        )
+
+    path = module.params['path']
+    network_interface_directory = "/etc/network/"
+    if os.path.isfile(os.path.join(network_interface_directory, path)):
+        network_interface_filepath = os.path.realpath(os.path.join(network_interface_directory, path))
+    else:
+        module.fail_json(msg="File %s was not found" % (path))
+
+    network_interface_details = OrderedDict()
+    exported_network_adapters = []
+    interface_name = []
+    interface_info = []
+    interfaces_in_file = debinterface.Interfaces(interfaces_path=network_interface_filepath)
+    adapters = interfaces_in_file.adapters
+
+    for adapter in adapters:
+        item = adapter.export()
+        exported_network_adapters.append(item)
+        interface_name.append(adapter.attributes["name"])
+
+    for index, interface in enumerate(exported_network_adapters):
+        interface_info.append(
+            {
+                "addrFam": interface.get("addrFam", None),
+                "auto": interface.get("auto", None),
+                "ip setting": interface.get("source", None),
+                "address": interface.get("address", None),
+                "netmask": interface.get("netmask", None),
+                "gateway": interface.get("gateway", None),
+                "up": interface.get("up", None),
+                "down": interface.get("down", None),
+                "pre-up": interface.get("pre-up", None),
+                "pre-down": interface.get("pre-down", None),
+                "post-up": interface.get("post-up", None),
+                "post-down": interface.get("post-down", None),
+                "bridge-opts": interface.get("bridge-opts", None),
+                "wlan-opts": interface.get("unknown", None),
+            }
+        )
+
+    for key, value in zip(interface_name, interface_info):
+        network_interface_details.setdefault(key, []).append(value)
+
+    with open("parsed_network_interfaces.json", "w") as json_file:
+        json.dump(
+            network_interface_details, json_file, indent=4, separators=(",", ": ")
+        )
+
+    module.exit_json(json=json_file)
 
 if __name__ == '__main__':
     main()
