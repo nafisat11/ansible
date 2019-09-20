@@ -1,47 +1,84 @@
-import debinterface
-from pprint import pprint as pp
 import json
+import argparse
+import os
+import sys
 from collections import OrderedDict
 
 
 def main():
-    netiface = OrderedDict()
-    ifaces = []
-    names = []
-    iface_info = []
-    interfaces = debinterface.Interfaces(interfaces_path="/home/nafisa/Documents/iface")
-    adapters = interfaces.adapters
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--file",
+        "-f",
+        type=str,
+        help="Enter the name of the network interface file you wish to parse",
+        action="store",
+    )
+    args = parser.parse_args()
 
-    for ad in adapters:
-        item = ad.export()
-        ifaces.append(item)
-        names.append(ad.attributes["name"])
-
-    for index, iface in enumerate(ifaces):
-        iface_info.append(
-            {
-                "addrFam": iface.get("addrFam", None),
-                "auto": iface.get("auto", None),
-                "ip setting": iface.get("source", None),
-                "address": iface.get("address", None),
-                "netmask": iface.get("netmask", None),
-                "gateway": iface.get("gateway", None),
-                "up": iface.get("up", None),
-                "down": iface.get("down", None),
-                "pre-up": iface.get("pre-up", None),
-                "pre-down": iface.get("pre-down", None),
-                "post-up": iface.get("post-up", None),
-                "post-down": iface.get("post-down", None),
-                "bridge-opts": iface.get("bridge-opts", None),
-                "wlan-opts": iface.get("unknown", None),
-            }
+    filename = args.file
+    network_interface_directory = "/home/nafisa/Documents/"
+    if os.path.isfile(os.path.join(network_interface_directory, filename)):
+        network_interface_filepath = os.path.realpath(
+            os.path.join(network_interface_directory, filename)
         )
+    else:
+        print("Please enter valid network interfaces filename")
+        sys.exit(1)
 
-    for key, value in zip(names, iface_info):
-        netiface.setdefault(key, []).append(value)
+    header = {"version":"0.0.0"}
+    interfaces_json_model = {}
+    network_interface_details = OrderedDict()
+    interfaces = {}
+
+    with open(network_interface_filepath) as interfaces_file:
+        is_interface_stanza = False
+        interfaces = []
+        for line in interfaces_file:
+            """if line.strip().startswith("#"):
+                continue
+            line = line.split("#")[0]
+            if not line.strip():
+                continue"""
+            line = line.strip().split("#")[0]
+            if not line.strip() or line.startswith("source"):
+                continue
+            #print(line)
+
+            if line.startswith("auto"):
+                auto_line = line.split()
+                interfaces = {}
+                if not interfaces:
+                    
+                interfaces = {auto_line[1]:[]}
+                print(interfaces)           
+
+                #print(auto_line)
+        
+            #inet6_ifaces = []
+            #if line.startswith("iface"):
+                #iface_line = line.split()
+                #iface = iface_line[1]
+                #mode = iface_line[3]
+                #if "inet" in iface_line:
+                    #network_interface_details[iface] = {"inet":{"mode":mode}}
+
+                #elif "inet6" in iface_line:
+                    #network_interface_details[iface].update({"inet6":{"mode":mode}})"""
+
+
+
+
+
+    
+    interfaces_json_model["header"] = header
+    interfaces_json_model["interfaces_data"] = network_interface_details
+
 
     with open("parsed_network_interfaces.json", "w") as json_file:
-        json.dump(netiface, json_file, indent=4, separators=(",", ": "), sort_keys=True)
+        json.dump(
+            interfaces_json_model, json_file, indent=4, separators=(",", ": ")
+        )
 
 
 if __name__ == "__main__":
