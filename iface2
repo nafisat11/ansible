@@ -1,0 +1,194 @@
+###############################################################################
+#If using EPM, changes to this file will NOT be preserved
+###############################################################################
+###############################################################################
+#Locations from which to pull additional configuration rules
+#
+source-directory /etc/network/interfaces.d
+
+###############################################################################
+auto lo 
+iface lo inet loopback
+
+###############################################################################
+auto bond0 #gfdsgfds
+iface bond0 inet manual #fgs
+     up ifconfig bond0 0.0.0.0 up #gfdsg
+     slaves eth1 eth0  
+
+auto vlan10
+iface vlan10 inet static
+     address 10.10.10.12
+     netmask 255.255.255.0
+     vlan-raw-device bond0
+
+auto eth1.10
+iface eth1.10 inet static
+     address 10.0.0.1
+     netmask 255.255.255.0
+     vlan-raw-device eth1
+
+#(eth0)
+#
+#Reference definition for DHCP
+#(broadcast and gateway are optional)
+#
+#auto eth0
+#iface eth0 inet dhcp
+
+###############################################################################
+#(eth0)
+#
+#Reference definition for static addressing
+#(broadcast and gateway are optional)
+#
+auto eth0
+iface eth0 inet static
+    address 172.29.0.110
+    netmask 255.255.0.0
+    broadcast 172.29.255.255
+    gateway 172.29.0.1
+
+iface eth0 inet6 static
+    address fd70:3d70:3d70:3d70:0100:0001:c00b:69b0
+    netmask 64
+    post-up ip addr change fd70:3d70:3d70:3d70:0100:0001:c00b:69b0 dev eth0:1 preferred_lft forever
+
+###############################################################################
+#(eth0:1)
+#
+#The rescue interface - touching this is usually a bad idea
+#
+auto eth0:1
+iface eth0:1 inet static
+    address 192.168.77.77
+    netmask 255.255.255.0
+iface eth0:1 inet6 static
+    address fd70:3d70:3d70:3d70:0100:0001:c00b:69b0
+    netmask 64
+    post-up ip addr change fd70:3d70:3d70:3d70:0100:0001:c00b:69b0 dev eth0:1 preferred_lft forever
+
+###############################################################################
+#(eth1)
+#
+#Reference definition for DHCP
+#
+#auto eth1
+#iface eth1 inet dhcp
+
+###############################################################################
+#(eth2)
+#
+#Reference definition for DHCP
+#
+#auto eth2
+#iface eth2 inet dhcp
+
+###############################################################################
+#(eth3)
+#
+#Reference definition for DHCP
+#
+#auto eth3
+#iface eth3 inet dhcp
+
+###############################################################################
+#(br0)
+#
+#A bridge that simulates the legacy e50 Hornet, which only had two Ethernet
+#interfaces, with a basic three-port switch in front of eth1
+#br0 has a dummy ip; it does not have to be changed
+#
+auto br0
+iface br0 inet static
+    address 192.168.78.77
+    netmask 255.255.255.255
+    bridge_ports eth1 eth2 eth3
+    bridge_stp off
+    bridge_maxwait 0
+
+###############################################################################
+#(wlan0)
+#
+#Roaming-capable version; each AP may have a corresponding static/DHCP
+#ruleset; see wpa_supplicant.conf
+#
+auto wlan0
+iface wlan0 inet manual
+    pre-up sleep 1
+    wpa-driver nl80211
+    wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+    post-up iw dev wlan0 set power_save off
+
+iface wlan0 inet6 manual
+    address fd70:3d70:3d70:3d70:1000:0001:c00b:69b0
+    netmask 64
+    post-up ip addr change fd70:3d70:3d70:3d70:0100:0001:c00b:69b0 dev wlan0 preferred_lft forever
+    
+###############################################################################
+#(wlan0)
+#
+#Non-roaming variant (conflicts with roaming-capable version)
+#
+#auto wlan0
+#iface wlan0 inet static
+#    address 192.168.0.100
+#    netmask 255.255.255.0
+#    gateway 192.168.0.1
+#    pre-up sleep 1
+#    wpa-driver nl80211
+#    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+#    post-up iw dev wlan0 set power_save off
+
+###############################################################################
+#Definitions for WiFi roaming
+#These must be in /etc/network/interface, not /etc/network/interface.d/
+#You are free to add and use your own definitions
+###############################################################################
+
+###############################################################################
+#When 'wpa_supplicant.conf' specifies 'id_str=any_dhcp', this is what will be
+#used; also requires that the wlanX config uses wpa-roam, not wpa-conf
+#
+iface any_dhcp inet dhcp
+
+###############################################################################
+#When 'wpa_supplicant.conf' specifies 'id_str=any_static', this is what will be
+#used; also requires that the wlanX config uses wpa-roam, not wpa-conf
+#
+iface any_static inet static
+    address 192.168.168.35
+    netmask 255.255.255.0
+    gateway 192.168.168.1
+    
+####################################################################
+#(mea0)
+#
+#Motorola Mesh Solo
+#
+#dhcp, static, and manual modes all work as normal.
+#
+auto mea0
+iface mea0 inet dhcp
+
+iface mea0 inet6 manual
+    address fd70:3d70:3d70:3d70:1000:0001:c00b:69b0
+    netmask 64
+    post-up ip addr change fd70:3d70:3d70:3d70:0100:0001:c00b:69b0 dev wlan0 preferred_lft forever
+    
+    #Use the mea-clients script in this stanza if you want client routing
+    #automatically configured for three client IPs, determined from the spoofed
+    #host IP. It only works with new Motomesh firmware and in spoof mode; it is
+    #primarily used only by older customers used to the original Motomesh
+    #firmware.
+    #
+    post-up mea-clients mea0 eth1 up
+    post-down mea-clients mea0 eth1 down
+    
+    #The watchdog watches for changes made to the tranceiver in One Point
+    #and reboots the IEP so that the SBC can read them and reconfigure itself.
+    #It only works with new Motomesh firmware; comment it if legacy firmware is
+    #used.
+    #
+    post-up mea-watchdog mea0 start
+    post-down mea-watchdog mea0 stop
