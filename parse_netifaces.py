@@ -3,6 +3,8 @@ import argparse
 import os
 import sys
 from collections import OrderedDict
+from pprint import pprint as pp
+import re
 
 
 def main():
@@ -29,11 +31,12 @@ def main():
     header = {"version":"0.0.0"}
     interfaces_json_model = {}
     network_interface_details = OrderedDict()
-    interfaces = {}
 
     with open(network_interface_filepath) as interfaces_file:
-        is_interface_stanza = False
-        interfaces = []
+        inet_ifaces = []
+        inet6_ifaces = []
+        address = []
+        stanza_found = False
         for line in interfaces_file:
             """if line.strip().startswith("#"):
                 continue
@@ -41,17 +44,29 @@ def main():
             if not line.strip():
                 continue"""
             line = line.strip().split("#")[0]
-            if not line.strip() or line.startswith("source"):
+            if not line.strip():
                 continue
-            #print(line)
 
-            if line.startswith("auto"):
-                auto_line = line.split()
-                interfaces = {}
-                if not interfaces:
-                    
-                interfaces = {auto_line[1]:[]}
-                print(interfaces)           
+            match = re.search(r'iface .* inet[\D]', line)
+    
+            if match:
+                inet_ifaces.append([line])
+            elif re.search(r'iface .* inet6', line):
+                inet6_ifaces.append([line])
+            else:
+                address.append(line)
+                #for l in address:
+
+            #for l in re.findall(r"address .*", line):
+                #print(l)
+
+        pp(inet_ifaces)
+        pp(inet6_ifaces)
+        pp(address)
+
+
+            
+
 
                 #print(auto_line)
         
