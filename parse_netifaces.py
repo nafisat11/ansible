@@ -33,59 +33,28 @@ def main():
     network_interface_details = OrderedDict()
 
     with open(network_interface_filepath) as interfaces_file:
-        inet_ifaces = []
-        inet6_ifaces = []
-        address = []
-        stanza_found = False
+        is_interface_stanza = False
+        stanza = []
+        keywords = ("auto", "iface", "post-up", "post-down")
         for line in interfaces_file:
-            """if line.strip().startswith("#"):
-                continue
-            line = line.split("#")[0]
-            if not line.strip():
-                continue"""
             line = line.strip().split("#")[0]
-            if not line.strip():
-                continue
 
-            match = re.search(r'iface .* inet[\D]', line)
-    
-            if match:
-                inet_ifaces.append([line])
-            elif re.search(r'iface .* inet6', line):
-                inet6_ifaces.append([line])
-            else:
-                address.append(line)
-                #for l in address:
+            #line = re.sub("^(\s*\r?\n){2,}", "\r\n", line)
+            line = re.sub("[ \t]*\n{3,}", "\n\n", line)
 
-            #for l in re.findall(r"address .*", line):
-                #print(l)
+            if line.startswith(keywords):
+                interfaces = {}
+                if not interfaces:
+                    stanza.append(interfaces)
+                is_interface_stanza = True
 
-        pp(inet_ifaces)
-        pp(inet6_ifaces)
-        pp(address)
+            elif not line:
+                is_interface_stanza = False
 
+            if is_interface_stanza:
+                interfaces[line.split()[0]] = line.split()[1:]
 
-            
-
-
-                #print(auto_line)
-        
-            #inet6_ifaces = []
-            #if line.startswith("iface"):
-                #iface_line = line.split()
-                #iface = iface_line[1]
-                #mode = iface_line[3]
-                #if "inet" in iface_line:
-                    #network_interface_details[iface] = {"inet":{"mode":mode}}
-
-                #elif "inet6" in iface_line:
-                    #network_interface_details[iface].update({"inet6":{"mode":mode}})"""
-
-
-
-
-
-    
+                
     interfaces_json_model["header"] = header
     interfaces_json_model["interfaces_data"] = network_interface_details
 
