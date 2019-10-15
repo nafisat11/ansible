@@ -1,0 +1,11 @@
+---
+- name: normalize endpoints
+  gather_facts: false
+  hosts: endpoints
+
+  tasks:
+    - name: Mount endpoint as read-write
+      command: rw
+
+    - name: populate task execution file
+      
