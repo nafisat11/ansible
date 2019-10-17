@@ -1,11 +1,44 @@
 ---
-- name: normalize endpoints
+- name: normalize network state
   gather_facts: false
-  hosts: endpoints
+  hosts: test
 
   tasks:
     - name: Mount endpoint as read-write
       command: rw
 
-    - name: populate task execution file
-      
+    - name: create temporary working directory
+      tempfile:
+        state: directory
+        suffix: root
+        path: /tmp
+      register: root_dir
+
+    - name: create file to contain interfaces files and directories to be removed
+      file:
+        path: "{{ root_dir.path }}/iface_files_to_remove.txt"
+        state: touch
+        mode: '0644'
+      register: iface_files_to_remove
+
+    - name: populate interfaces file paths to be removed
+      script: populate.sh -f {{ iface_files_to_remove.dest }}
+
+    - name: copy normalized interfaces file template
+      copy:
+        src: normalized_interfaces
+        dest: /etc/network
+
+    - name: get list of interfaces files to be removed
+      command: cat {{ iface_files_to_remove.dest }}
+      register: files_to_delete
+
+    - name: remove listed filepaths
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "{{ files_to_delete.stdout_lines }}"
+
+    - name: Remount endpoint as read-only
+      command: ro
