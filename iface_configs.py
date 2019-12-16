@@ -8,6 +8,47 @@ class InterfacesConfig:
         self.data = data
         self.iface = iface
 
+
+class ListProps(InterfacesConfig):
+    def get_property(self):
+        pass
+
+    def add_line(self):
+        for k, v in self.get_properties().items():
+            with open("{}.conf".format(self.iface), "a") as iface_conf_file:
+                if not v or v is None:
+                    continue
+                for opt in range(len(v)):
+                    iface_conf_file.write("    {} {}\n".format(k, v[opt]))
+
+
+class StringProps(InterfacesConfig):
+    def get_property(self):
+        pass
+
+    def add_line(self):
+        for k, v in self.get_properties().items():
+            with open("{}.conf".format(self.iface), "a") as iface_conf_file:
+                if v is "" or v is None:
+                    continue
+                iface_conf_file.write("    {} {}\n".format(k, v))
+
+
+class DictProps(InterfacesConfig):
+    def get_property(self):
+        pass
+
+    def add_line(self):
+        for opt, value in self.get_properties().items():
+            with open(
+                "{}.conf".format(self.iface), "a"
+            ) as iface_conf_file:  # if not v or v is None
+                if type(value) is list:
+                    iface_conf_file.write("    {} {}\n".format(opt, " ".join(value)))
+                else:
+                    iface_conf_file.write("    {} {}\n".format(opt, value))
+
+
 class auto_prop(InterfacesConfig):
     def get_property(self):
         return self.data[self.iface].get("auto")
@@ -51,9 +92,10 @@ class addrFam(InterfacesConfig):
             ip6IfaceOptions(self.data, self.iface).add_line()
             ip6BridgeOpts(self.data, self.iface).add_line()
             ip6WlanOpts(self.data, self.iface).add_line()
+            ip6MeaOpts(self.data, self.iface).add_line()
 
 
-class ip4addr_props(InterfacesConfig):
+class ip4addr_props(StringProps):
     def get_properties(self):
         address = self.data[self.iface]["addrFam"]["inet"].get("address")
         netmask = self.data[self.iface]["addrFam"]["inet"].get("netmask")
@@ -61,15 +103,8 @@ class ip4addr_props(InterfacesConfig):
 
         return {"address": address, "netmask": netmask, "gateway": gateway}
 
-    def add_line(self):
-        for k, v in self.get_properties().items():
-            with open("{}.conf".format(self.iface), "a") as iface_conf_file:
-                if v is "" or v is None:
-                    continue
-                iface_conf_file.write("    {} {}\n".format(k, v))
 
-
-class ip6addr_props(InterfacesConfig):
+class ip6addr_props(StringProps):
     def get_properties(self):
         address = self.data[self.iface]["addrFam"]["inet6"].get("address")
         netmask = self.data[self.iface]["addrFam"]["inet6"].get("netmask")
@@ -77,15 +112,8 @@ class ip6addr_props(InterfacesConfig):
 
         return {"address": address, "netmask": netmask, "gateway": gateway}
 
-    def add_line(self):
-        for k, v in self.get_properties().items():
-            with open("{}.conf".format(self.iface), "a") as iface_conf_file:
-                if v is "" or v is None:
-                    continue
-                iface_conf_file.write("    {} {}\n".format(k, v))
 
-
-class ip4IfaceOptions(ip4addr_props):
+class ip4IfaceOptions(ListProps):
     def get_properties(self):
         pre_up = self.data[self.iface]["addrFam"]["inet"].get("pre-up")
         up = self.data[self.iface]["addrFam"]["inet"].get("up")
@@ -103,16 +131,8 @@ class ip4IfaceOptions(ip4addr_props):
             "post-down": post_down,
         }
 
-    def add_line(self):
-        for k, v in self.get_properties().items():
-            with open("{}.conf".format(self.iface), "a") as iface_conf_file:
-                if not v or v is None:
-                    continue
-                for opt in range(len(v)):
-                    iface_conf_file.write("    {} {}\n".format(k, v[opt]))
 
-
-class ip6IfaceOptions(ip6addr_props):
+class ip6IfaceOptions(ListProps):
     def get_properties(self):
         pre_up = self.data[self.iface]["addrFam"]["inet6"].get("pre-up")
         up = self.data[self.iface]["addrFam"]["inet6"].get("up")
@@ -130,93 +150,45 @@ class ip6IfaceOptions(ip6addr_props):
             "post-down": post_down,
         }
 
-    def add_line(self):
-        for k, v in self.get_properties().items():
-            with open("{}.conf".format(self.iface), "a") as iface_conf_file:
-                if not v or v is None:
-                    continue
-                for opt in range(len(v)):
-                    iface_conf_file.write("    {} {}\n".format(k, v[opt]))
 
-
-class ip4VlanOpts(ip4addr_props):
+class ip4VlanOpts(DictProps):
     def get_properties(self):
         pass
 
-    def add_line(self):
-        pass
 
-
-class ip6VlanOpts(ip6addr_props):
+class ip6VlanOpts(DictProps):
     def get_properties(self):
         pass
 
-    def add_line(self):
-        pass
 
-
-class ip4BridgeOpts(ip4addr_props):
+class ip4BridgeOpts(DictProps):
     def get_properties(self):
         return self.data[self.iface]["addrFam"]["inet"].get("bridge_opts")
 
-    def add_line(self):
-        for opt, value in self.get_properties().items():
-            with open(
-                "{}.conf".format(self.iface), "a"
-            ) as iface_conf_file:  # if not v or v is None
-                if type(value) is list:
-                    iface_conf_file.write("    {} {}\n".format(opt, " ".join(value)))
-                else:
-                    iface_conf_file.write("    {} {}\n".format(opt, value))
 
-
-class ip6BridgeOpts(ip6addr_props):
+class ip6BridgeOpts(DictProps):
     def get_properties(self):
         return self.data[self.iface]["addrFam"]["inet6"].get("bridge_opts")
 
-    def add_line(self):
-        for opt, value in self.get_properties().items():
-            with open("{}.conf".format(self.iface), "a") as iface_conf_file:
-                if type(value) is list:
-                    iface_conf_file.write("    {} {}\n".format(opt, " ".join(value)))
-                else:
-                    iface_conf_file.write("    {} {}\n".format(opt, value))
 
-
-class ip4WlanOpts(ip4addr_props):
+class ip4WlanOpts(DictProps):
     def get_properties(self):
         return self.data[self.iface]["addrFam"]["inet"].get("wlan_opts")
 
-    # def add_line(self):
-    #    for opt, value in self.get_properties().items():
-    #        with open("{}.conf".format(self.iface), "a") as iface_conf_file:
-    #            iface_conf_file.write("    {} {}\n".format(opt, value))
 
-
-class ip6WlanOpts(ip6addr_props):
+class ip6WlanOpts(DictProps):
     def get_properties(self):
         return self.data[self.iface]["addrFam"]["inet6"].get("wlan_opts")
 
 
-class ip4MeaOpts(ip4addr_props):
+class ip4MeaOpts(ListProps):
     def get_properties(self):
         return self.data[self.iface]["addrFam"]["inet"].get("mea_opts")
 
-    def add_line(self):
-        for k, v in self.get_properties().items():
-            with open("{}.conf".format(self.iface), "a") as iface_conf_file:
-                if not v or v is None:
-                    continue
-                for opt in range(len(v)):
-                    iface_conf_file.write("    {} {}\n".format(k, v[opt]))
 
-
-class ip6MeaOpts(ip6addr_props):
+class ip6MeaOpts(ListProps):
     def get_properties(self):
         return self.data[self.iface]["addrFam"]["inet6"].get("mea_opts")
-
-    def add_line(self):
-        pass
 
 
 def main():
