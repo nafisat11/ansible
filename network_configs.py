@@ -4,6 +4,8 @@ import os
 
 from iface_configs import *
 from rajant_configs import *
+from sysctl_configs import *
+from wpa_supplicant_config import *
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -24,9 +26,16 @@ if __name__ == "__main__":
         data_structure = json.load(json_file)
         interfaces_data = data_structure["data"]["interfaces"]
         rajant_data = data_structure["data"]["rajant"]
+        sysctl_data = data_structure["data"]["sysctl"]
+        wpa_supplicant_data = data_structure["data"]["80211"]["wpa_supplicant"]
         for iface in interfaces_data.keys():
             auto_prop(interfaces_data, iface).add_line()
             addrFam(interfaces_data, iface).add_line()
 
         for breadcrumb in rajant_data["breadcrumbs"]:
-            RajantConfig(breadcrumb).get_setting()
+            RajantConfig(breadcrumb).write_config()
+
+        for interface in wpa_supplicant_data:
+            WpaSupplicantConfig(interface).write_config()
+
+        SysctlConfig(sysctl_data).write_config()
