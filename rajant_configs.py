@@ -86,3 +86,6 @@ class RajantConfig:
             if self.bc_data[setting] is "" or self.bc_data[setting] is None:
                 continue
             self.bc_settings[setting].__get__(self)()
+
+    def write_config(self):
+        self.get_setting()

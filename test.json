@@ -1,0 +1,222 @@
+{
+    "header":{
+        "version": "0.1",
+        "meta": {}
+    },
+    "data": {
+        "interfaces":{
+            "eth0": {
+                "auto": true,
+                "addrFam": {
+                    "inet": {
+                        "mode": "static",
+                        "address": "192.168.1.1",
+                        "netmask": "255.255.255.255",
+                        "gateway": "192.169.0.0",
+                        "pre-up": ["ip addr change fd70:3d70:3d70:3d70:0100:0001:c00b:69b0 dev eth0:1 preferred_lft forever"],
+                        "up": ["3423423"],
+                        "post-up": [],
+                        "down": [],
+                        "pre-down": [],
+                        "post-down": ["11"],
+                        "vlan_opts": {},
+                        "bridge_opts": {
+                            "bridge_ports": ["eth1", "eth2", "eth3"],
+                            "bridge_stp": "off",
+                            "bridge_maxwait": 0
+                            },
+                        "wlan_opts": {"wpa-driver": "nl80211",
+                        "wpa-roam": "/etc/wpa_supplicant/wpa_supplicant.wlan0.conf"
+                        },
+                        "mea_opts": {}
+                    },
+                    "inet6": {
+                        "mode": "manual",
+                        "vlan_opts": {},
+                        "bridge_opts": {
+                            "bridge_ports": ["eth4", "eth5", "eth6"],
+                            "bridge_stp": "on",
+                            "bridge_maxwait": 5
+                            },
+                        "wlan_opts": {"wpa-driver": "nl80211"},
+                        "mea_opts": {}
+                    }
+                }
+            },
+            "eth0.2": {
+                "auto": true,
+                "addrFam": {
+                    "inet": {
+                        "mode": "static",
+                        "address": "192.168.1.1",
+                        "netmask": "255.255.255.0",
+                        "gateway": "",
+                        "pre-up": ["454353", "2323"],
+                        "up": [],
+                        "post-up": ["50"],
+                        "down": [],
+                        "pre-down": [],
+                        "post-down": ["32232"],
+                        "vlan_opts": {
+                            "vlan-raw-device":{
+                                "parent": "eth0",
+                                "id": 2
+                            }
+                        },
+                        "bridge_opts": {},
+                        "wlan_opts": {},
+                        "mea_opts": {"post-up": [
+                            "mea-clients mea0 eth1 up"
+                        ]}
+                    }
+                }
+            }
+        },
+        "rajant": {
+            "breadcrumbs" : [{
+                "serial": "ME4-2450RE2-31865",
+                "management_interface": "br0",
+                "ip": "10.30.65.1",
+                "netmask": "255.255.0.0",
+                "gateway": "10.30.55.1",
+                "dns": "",
+                "netkey": "<network-key>",
+                "netname": "qa-rajant",
+                "assignment": "MANUAL",
+				"bandwith": {
+					"interface":{
+						"wlan0": "ht40+",
+						"wlan1": "ht20"
+					}
+				},
+				"channel": {
+					"interface": {
+						"wlan0": 157,
+						"wlan1": 11
+					}
+				},
+				"powerlevel": {
+					"interface": {
+						"wlan0": 6,
+						"wlan1": 11
+					}
+				},
+				"regmode": {
+					"interface": {
+						"wlan0": "AUTO",
+						"wlan1": "AUTO"
+					}
+				},
+				"gpsip": "<ipv4>",
+				"gpsport": "<number>"
+             }]
+        },
+        "80211": {
+            "wpa_supplicant": [{
+                "interface": "wlan0",
+                "autoscan": "periodic:1",
+                "roaming_thresholds": "-85:1 -80:2 -75:3 -70:4",
+                "roaming_threshold_ceiling": 20,
+                "signal_threshold": -75,
+                "interval_below_threshold": 3,
+                "interval_above_threshold": 15,
+                "networks": [
+                    {
+                        "key_mgmt": "WPA-PSK",
+                        "scan_ssid": "1",
+                        "ssid": "\"qa1\"",
+                        "id_str": "\"any_dhcp\"",
+                        "proto": "RSN",
+                        "psk_hash": "0d2e0ac231f87dd013cfb9c14a48139070820f513488e73be9f477a39abe6235",
+                        "psk_text": "",
+                        "bgscan": "\"simple:3:-75:15\"",
+                        "auth_alg": "OPEN"
+                    }
+                ]
+            }],
+            "host_apd": [{
+                "ctrl_interface": "/var/run/hostapd",
+                "bridge": "br0",
+                "interface": "wlan0",
+                "driver": "nl80211",
+                "ssid": "qa-rack1",
+                "hw_mode": "g",
+                "channel": "011",
+                "macaddr_acl": 0,
+                "auth_algs": 3,
+                "ignore_broadcast_ssid": 0,
+                "wme_enabled": 1,
+                "ieee80211n": 1,
+                "ht_capab": "[TX-STBC2][RX-STBC2]",
+                "wpa": 3,
+                "wpa_passphrase": "q@test1ng",
+                "wpa_key_mgmt":"WPA-PSK",
+                "wpa_pairwise": "TKIP",
+                "rsn_pairwise": "CCMP",
+                "wep_default_key": 0,
+                "wep_key0": "1234567890"
+            }],
+            "crda": [{
+                "REGDOMAIN": "CA"
+            }]
+        },
+        "sysctl": {
+            "net.warnings": 1,
+            "net.ipv4.ip_nonlocal_bind": 1,
+            "net.ipv4.conf.all.proxy_arp": 0,
+            "net.ipv4.conf.all.forwarding": 1,
+            "net.ipv6.conf.all.forwarding": 1,
+            "net.ipv6.conf.all.dad_transmits": 0,
+            "net.ipv6.conf.all.accept_dad": 0,
+            "net.ipv4.tcp_low_latency": 1,
+            "net.ipv4.tcp_frto": 2
+        },
+        "ntp": {
+            "host": "",
+            "port": 123,
+            "timeout": 30,
+            "poll_frequency_s": 0
+        },
+        "dnsmasq": {
+            "port": 53,
+            "dns-forward-max": 32,
+            "cache-size": 512,
+            "conf-file": "/etc/dnsmasq-openresolv.conf",
+            "resolv-file": "/etc/dnsmasq-resolv.conf",
+            "interface": "lo",
+            "no-dhcp-interface": "lo"
+        },
+        "mea": [{
+            "interface": "mea0",
+            "sc": 4,
+            "security": "open",
+            "pskhex": "\"00 00 00 00 00 00\"",
+            "pskascii": "\"12345\"",
+            "pass": "\"pass phrase\"",
+            "meshid": "\"meshid\"",
+            "discrim": "on",
+            "hostmode": "network",
+            "hostip": "192.168.70.6",
+            "hostserver": "10.0.0.0",
+            "hostnetmask": "255.255.255.0",
+            "hostdns": "1.1.1.1",
+            "hostgateway": "1.2.3.4",
+            "trxname": "\"name\"",
+            "trxmode": "spoof",
+            "trxip": "ddd.ddd.ddd.ddd",
+            "trxserver": "ddd.ddd.ddd.ddd",
+            "trxnetmask": "ddd.ddd.ddd.ddd",
+            "trxdns": "ddd.ddd.ddd.ddd",
+            "trxgateway": "ddd.ddd.ddd.ddd",
+            "mobile": "off",
+            "type": "sd",
+            "pwrctrl": 25,
+            "pwrdata": 0,
+            "cntryover": "124",
+            "trxvlan": 4095,
+            "hostvlan": 5,
+            "vlanstrip": "off",
+            "channels": "2 3 c 0"
+        }]
+    }
+}

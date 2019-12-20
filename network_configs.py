@@ -5,7 +5,9 @@ import os
 from iface_configs import *
 from rajant_configs import *
 from sysctl_configs import *
-from wpa_supplicant_config import *
+from wifi80211_configs import *
+from ntp_configs import *
+from mea_configs import *
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -28,6 +30,11 @@ if __name__ == "__main__":
         rajant_data = data_structure["data"]["rajant"]
         sysctl_data = data_structure["data"]["sysctl"]
         wpa_supplicant_data = data_structure["data"]["80211"]["wpa_supplicant"]
+        host_apd_data = data_structure["data"]["80211"]["host_apd"]
+        crda_data = data_structure["data"]["80211"]["crda"]
+        ntp_data = data_structure["data"]["ntp"]
+        mea_data = data_structure["data"]["mea"]
+
         for iface in interfaces_data.keys():
             auto_prop(interfaces_data, iface).add_line()
             addrFam(interfaces_data, iface).add_line()
@@ -37,5 +44,16 @@ if __name__ == "__main__":
 
         for interface in wpa_supplicant_data:
             WpaSupplicantConfig(interface).write_config()
+
+        for ap in host_apd_data:
+            HostapdConfig(ap).write_config()
+
+        for wireless_domain in crda_data:
+            CrdaConfig(wireless_domain).write_config()
+
+        for mea_device in mea_data:
+            MeaConfig(mea_device).write_config()
+
+        NtpConfig(ntp_data).write_config()
 
         SysctlConfig(sysctl_data).write_config()
