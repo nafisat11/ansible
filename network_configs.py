@@ -24,16 +24,16 @@ if __name__ == "__main__":
         print("Please enter valid filename")
         sys.exit(1)
 
-    with open(json_filepath) as json_file:
+    with open(json_filepath) as json_file:              #add checks to see if keys are present
         data_structure = json.load(json_file)
-        interfaces_data = data_structure["data"]["interfaces"]
-        rajant_data = data_structure["data"]["rajant"]
-        sysctl_data = data_structure["data"]["sysctl"]
+        interfaces_data = data_structure["data"].get("interfaces")
+        rajant_data = data_structure["data"].get("rajant")
+        sysctl_data = data_structure["data"].get("sysctl")
         wpa_supplicant_data = data_structure["data"]["80211"]["wpa_supplicant"]
         host_apd_data = data_structure["data"]["80211"]["host_apd"]
         crda_data = data_structure["data"]["80211"]["crda"]
-        ntp_data = data_structure["data"]["ntp"]
-        mea_data = data_structure["data"]["mea"]
+        ntp_data = data_structure["data"].get("ntp")
+        mea_data = data_structure["data"].get("mea")
 
         for iface in interfaces_data.keys():
             auto_prop(interfaces_data, iface).add_line()

@@ -69,6 +69,7 @@ class addrFam(InterfacesConfig):
                         self.iface, self.data[self.iface]["addrFam"]["inet"].get("mode")
                     )
                 )
+            ip4VlanOpts(self.data, self.iface).add_line()
             ip4addr_props(self.data, self.iface).add_line()
             ip4IfaceOptions(self.data, self.iface).add_line()
             ip4BridgeOpts(self.data, self.iface).add_line()
@@ -83,6 +84,7 @@ class addrFam(InterfacesConfig):
                         self.data[self.iface]["addrFam"]["inet6"].get("mode"),
                     )
                 )
+            ip6VlanOpts(self.data, self.iface).add_line()
             ip6addr_props(self.data, self.iface).add_line()
             ip6IfaceOptions(self.data, self.iface).add_line()
             ip6BridgeOpts(self.data, self.iface).add_line()
@@ -146,19 +148,29 @@ class ip6IfaceOptions(ListProps):
         }
 
 
-class ip4VlanOpts(DictProps):
-    def get_properties(self):
-        pass
+class ip4VlanOpts(DictProps):           #Vlan id must be numeric, value between 1 and 4094, unique
+    def get_properties(self):           #
+        return self.data[self.iface]["addrFam"]["inet"].get("vlan_opts")
+
+    def add_line(self):
+        for opt, value in self.get_properties().items():
+            with open("{}.conf".format(self.iface), "a") as iface_conf_file:
+                iface_conf_file.write("    vlan-raw-device {}\n".format(value.get("parent")))
 
 
 class ip6VlanOpts(DictProps):
     def get_properties(self):
-        pass
+        return self.data[self.iface]["addrFam"]["inet6"].get("vlan_opts")
+
+    def add_line(self):
+        for opt, value in self.get_properties().items():
+            with open("{}.conf".format(self.iface), "a") as iface_conf_file:
+                iface_conf_file.write("    vlan-raw-device {}\n".format(value.get("parent")))
 
 
-class ip4BridgeOpts(DictProps):
-    def get_properties(self):
-        return self.data[self.iface]["addrFam"]["inet"].get("bridge_opts")
+class ip4BridgeOpts(DictProps):                                                 #Interface cannot be used by another bridge
+    def get_properties(self):                                                   #Only one wireless interface allowed in a bridge
+        return self.data[self.iface]["addrFam"]["inet"].get("bridge_opts")      #
 
 
 class ip6BridgeOpts(DictProps):

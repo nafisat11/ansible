@@ -4,9 +4,6 @@
   hosts: test
 
   tasks:
-    - name: Mount endpoint as read-write
-      command: rw
-
     - name: create temporary working directory
       tempfile:
         state: directory
@@ -21,18 +18,6 @@
         mode: '0644'
       register: iface_files_to_remove
 
-    - name: populate interfaces file paths to be removed
-      script: populate.sh -f {{ iface_files_to_remove.dest }}
-
-    - name: copy normalized interfaces file template
-      copy:
-        src: normalized_interfaces
-        dest: /etc/network
-
-    - name: get list of interfaces files to be removed
-      command: cat {{ iface_files_to_remove.dest }}
-      register: files_to_delete
-
     - name: remove listed filepaths
       file:
         path: "{{ item }}"
@@ -40,5 +25,36 @@
       with_items:
         - "{{ files_to_delete.stdout_lines }}"
 
-    - name: Remount endpoint as read-only
-      command: ro
+    - name: disable spd service
+      lineinfile: 
+        path: "{{ task_execution_file.dest }}"
+        line: "systemctl disable iep-spd.service"
+        state: present
+        backup: no
+      register: execute_task
+
+    - name: get interfaces file path
+      find: 
+        path: /etc/network
+        patterns: "interfaces*"
+        file_type: file
+      register: interfaces_path
+
+    - name: append filepaths to removal manifest 
+      lineinfile:
+        path: "{{ files_to_remove.dest }}"
+        line: "{{ item.path }}"
+        state: present
+        backup: no
+      with_items: "{{ interfaces_path.files }}"
+
+    ---
+    - name: run commit module
+      commit:
+        files: {"removal_manifest": "{{ files_to_remove.dest }}", 
+                "command_execution": "{{ command_execution_file.dest }}"}
+        source: "{{ workdir_path }}/etc/"
+        dest: "/etc/"
+      register: output
+
+

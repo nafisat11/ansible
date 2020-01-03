@@ -1,7 +1,7 @@
-class WpaSupplicantConfig:
-    def __init__(self, data):
-        self.data = data
-
+class WpaSupplicantConfig:                  #SSID must be defined if hidden
+    def __init__(self, data):               #SSID must be between 2 and 32 bytes long
+        self.data = data                    #Signal threshold must be between -99 and -1
+                                            #Interval above/below threshold must be between 1 and 999
     def add_line(self, line):
         with open(
             "wpa_supplicant.{}.conf".format(self.data["interface"]), "a+"
@@ -28,8 +28,8 @@ class WpaSupplicantConfig:
         self.get_network_props()
 
 
-class HostapdConfig:
-    def __init__(self, data):
+class HostapdConfig:                        #SSID must be defined and between 2 and 32 bytes long
+    def __init__(self, data):               #
         self.data = data
 
     def add_line(self, line):

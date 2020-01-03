@@ -89,3 +89,6 @@ class RajantConfig:
 
     def write_config(self):
         self.get_setting()
+
+#netkey >=8 characters or exactly 64 hex digits
+#
