@@ -24,7 +24,7 @@ if __name__ == "__main__":
         print("Please enter valid filename")
         sys.exit(1)
 
-    with open(json_filepath) as json_file:              #add checks to see if keys are present
+    with open(json_filepath) as json_file:  # add checks to see if keys are present
         data_structure = json.load(json_file)
         interfaces_data = data_structure["data"].get("interfaces")
         rajant_data = data_structure["data"].get("rajant")
@@ -36,24 +36,30 @@ if __name__ == "__main__":
         mea_data = data_structure["data"].get("mea")
 
         for iface in interfaces_data.keys():
-            auto_prop(interfaces_data, iface).add_line()
-            addrFam(interfaces_data, iface).add_line()
+            with open("{}.conf".format(iface), "w") as iface_conf_file:
+                if interfaces_data[iface]["auto"]:
+                    iface_conf_file.write("auto {}\n".format(iface))
 
-        for breadcrumb in rajant_data["breadcrumbs"]:
-            RajantConfig(breadcrumb).write_config()
+                if interfaces_data[iface]["addrFam"].get("inet"):
+                    inet_family = ifaceDetails(
+                        interfaces_data[iface]["addrFam"]["inet"]
+                    )
+                    iface_conf_file.write(
+                        "iface {} inet {}\n".format(
+                            iface, interfaces_data[iface]["addrFam"]["inet"]["mode"]
+                        )
+                    )
+                    for detail in inet_family.details():
+                        iface_conf_file.write(detail)
 
-        for interface in wpa_supplicant_data:
-            WpaSupplicantConfig(interface).write_config()
-
-        for ap in host_apd_data:
-            HostapdConfig(ap).write_config()
-
-        for wireless_domain in crda_data:
-            CrdaConfig(wireless_domain).write_config()
-
-        for mea_device in mea_data:
-            MeaConfig(mea_device).write_config()
-
-        NtpConfig(ntp_data).write_config()
-
-        SysctlConfig(sysctl_data).write_config()
+                if interfaces_data[iface]["addrFam"].get("inet6"):
+                    inet6_family = ifaceDetails(
+                        interfaces_data[iface]["addrFam"]["inet6"]
+                    )
+                    iface_conf_file.write(
+                        "\niface {} inet6 {}\n".format(
+                            iface, interfaces_data[iface]["addrFam"]["inet6"]["mode"]
+                        )
+                    )
+                    for detail in inet6_family.details():
+                        iface_conf_file.write(detail)
