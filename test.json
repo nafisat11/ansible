@@ -14,7 +14,7 @@
                         "netmask": "255.255.255.255",
                         "gateway": "192.169.0.0",
                         "pre-up": ["ip addr change fd70:3d70:3d70:3d70:0100:0001:c00b:69b0 dev eth0:1 preferred_lft forever"],
-                        "up": ["3423423"],
+                        "up": ["3423423", "2323"],
                         "post-up": [],
                         "down": [],
                         "pre-down": [],
@@ -32,6 +32,9 @@
                     },
                     "inet6": {
                         "mode": "manual",
+                        "address": "",
+                        "netmask": "",
+                        "gateway": "",
                         "vlan_opts": {},
                         "bridge_opts": {
                             "bridge_ports": ["eth4", "eth5", "eth6"],
@@ -131,6 +134,10 @@
                         "psk_text": "",
                         "bgscan": "\"simple:3:-75:15\"",
                         "auth_alg": "OPEN"
+                    },
+                    {
+                        "key_mgmt": "WPA2",
+                        "scan_ssid": "2"
                     }
                 ]
             }],

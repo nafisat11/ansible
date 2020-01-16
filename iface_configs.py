@@ -1,268 +1,308 @@
-class IpAddress:
-    def __init__(self, address):
-        self._address = address
+"""This module represents an interface stanza definition"""
 
-    @property
-    def address(self):
-        return self._address
-    
+
+class AddrOpts:
+    """
+    A class for processing ip address options.
+
+    Attributes
+    ----------
+    address : str
+        dotted quad ip address
+
+    netmask : str
+        netmask (dotted quad or number of bits)
+
+    gateway : str
+        default gateway address (dotted quad)
+    """
+
+    def __init__(self, data):
+        """
+        The constructor for the AddrOpts class.
+
+        Parameters
+        ----------
+        data : dict
+            dictionary containing interfaces option data specific to an address family
+        """
+        self.address = data.get("address", "")
+        self.netmask = data.get("netmask", "")
+        self.gateway = data.get("gateway", "")
+
     def stanza_line(self):
-        if self._address != "":
-            return "    {} {}\n".format("address", self._address)
-        else:
-            return ""
-
-class IpNetmask:
-    def __init__(self, netmask):
-        self._netmask = netmask
-
-    @property
-    def netmask(self):
-        return self._netmask
-    
-    def stanza_line(self):
-        if self._netmask != "":
-            return "    {} {}\n".format("netmask", self._netmask)
-        else:
-            return ""
-
-class IpGateway:
-    def __init__(self, gateway):
-        self._gateway = gateway
-
-    @property
-    def gateway(self):
-        return self._gateway
-    
-    def stanza_line(self):
-        if self._gateway != "":
-            return "    {} {}\n".format("gateway", self._gateway)
-        else:
-            return ""
-
-class PreupOpt:
-    def __init__(self, pre_up):
-        self._pre_up = pre_up
-
-    @property
-    def pre_up(self):
-        return self._pre_up
-    
-    def stanza_line(self):
+        """
+        Returns string(s) formatted for an interface stanza
+        """
         lines = ""
-        if self._pre_up:
-            for opt in range(len(self._pre_up)):
-                lines += "    {} {}\n".format("pre-up", self._pre_up[opt])
-            return lines
-        else:
-            return ""
+        if self.address != "":
+            lines += "    {} {}\n".format("address", self.address)
+        if self.netmask != "":
+            lines += "    {} {}\n".format("netmask", self.netmask)
+        if self.gateway != "":
+            lines += "    {} {}\n".format("gateway", self.gateway)
+        return lines
 
-class UpOpt:
-    def __init__(self, up):
-        self._up = up
 
-    @property
-    def up(self):
-        return self._up
-    
+class IfaceOpts:
+    """
+    A class for processing generic interface command options.
+
+    Attributes
+    ----------
+    pre_up : list
+        command(s) to run before bringing interface up
+
+    up : list 
+
+    post_up : list
+        command(s) to run after bringing interface up
+
+    pre_down : list 
+        command(s) to run before bringing interface down
+
+    down : list 
+
+    post_down : list 
+        command(s) to run after bringing interface down
+    """
+
+    def __init__(self, data):
+        """
+        The constructor for the IfaceOpts class.
+
+        Parameters
+        ----------
+        data : dict
+            dictionary containing interfaces option data specific to an address family
+        """
+        self.pre_up = data.get("pre-up", [])
+        self.up = data.get("up", [])
+        self.post_up = data.get("post_up", [])
+        self.pre_down = data.get("pre_down", [])
+        self.down = data.get("down", [])
+        self.post_down = data.get("post_down", [])
+
     def stanza_line(self):
+        """
+        Returns string(s) formatted for an interface stanza
+        """
         lines = ""
-        if self._up:
-            for opt in range(len(self._up)):
-                lines += "    {} {}\n".format("up", self._up[opt])
-            return lines
-        else:
-            return ""
+        if self.pre_up:
+            for opt in range(len(self.pre_up)):
+                lines += "    {} {}\n".format("pre-up", self.pre_up[opt])
+        if self.up:
+            for opt in range(len(self.up)):
+                lines += "    {} {}\n".format("up", self.up[opt])
+        if self.post_up:
+            for opt in range(len(self.post_up)):
+                lines += "    {} {}\n".format("post-up", self.post_up[opt])
+        if self.pre_down:
+            for opt in range(len(self.pre_down)):
+                lines += "    {} {}\n".format("post-up", self.pre_down[opt])
+        if self.down:
+            for opt in range(len(self.down)):
+                lines += "    {} {}\n".format("post-up", self.down[opt])
+        if self.post_down:
+            for opt in range(len(self.post_down)):
+                lines += "    {} {}\n".format("post-up", self.post_down[opt])
+        return lines
 
-class PostupOpt:
-    def __init__(self, post_up):
-        self._post_up = post_up
-
-    @property
-    def post_up(self):
-        return self._post_up
-    
-    def stanza_line(self):
-        lines = ""
-        if self._post_up:
-            for opt in range(len(self._post_up)):
-                lines += "    {} {}\n".format("post-up", self._post_up[opt])
-            return lines
-        else:
-            return ""
-
-class PredownOpt:
-    def __init__(self, pre_down):
-        self._pre_down = pre_down
-
-    @property
-    def pre_down(self):
-        return self._pre_down
-    
-    def stanza_line(self):
-        lines = ""
-        if self._pre_down:
-            for opt in range(len(self._pre_down)):
-                lines += "    {} {}\n".format("pre-down", self._pre_down[opt])
-            return lines
-        else:
-            return ""
-
-class DownOpt:
-    def __init__(self, down):
-        self._down = down
-
-    @property
-    def down(self):
-        return self._down
-    
-    def stanza_line(self):
-        lines = ""
-        if self._down:
-            for opt in range(len(self._down)):
-                lines += "    {} {}\n".format("down", self._down[opt])
-            return lines
-        else:
-            return ""
-
-class PostdownOpt:
-    def __init__(self, post_down):
-        self._post_down = post_down
-
-    @property
-    def post_down(self):
-        return self._post_down
-    
-    def stanza_line(self):
-        lines = ""
-        if self._post_down:
-            for opt in range(len(self._post_down)):
-                lines += "    {} {}\n".format("post-down", self._post_down[opt])
-            return lines
-        else:
-            return ""
 
 class VlanOpts:
-    def __init__(self, vlan_opts):
-        self._vlan_parent = vlan_opts.get("parent", "")
-        self._vlan_id = vlan_opts.get("id", "")
+    """
+    A class for processing vlan interface options.
 
-    @property
-    def vlan_parent(self):
-        return self._vlan_parent
+    Attributes
+    ----------
+    vlan_parent : str
+        physical link
 
-    @property
-    def vlan_id(self):
-        return self._vlan_id
-    
+    vlan_id : int
+        vlan identifier
+    """
+
+    def __init__(self, data):
+        """
+        The constructor for the VlanOpts class
+
+        Parameters
+        ----------
+        data : dict
+            dictionary containing interfaces option data specific to an address family
+        """
+        self.vlan_parent = ""
+        if data["vlan_opts"]:  # not empty
+            if data["vlan_opts"].get("vlan-raw-device"):  # vlan-raw-device is not empty
+                self.vlan_parent = data["vlan_opts"]["vlan-raw-device"].get(
+                    "parent", ""
+                )
+
     def stanza_line(self):
-        if self._vlan_parent != "":
-            return "    vlan-raw-device {}".format(self._vlan_parent)
+        """
+        Returns string(s) formatted for an interface stanza wanting to setup a vlan
+        """
+        if self.vlan_parent != "":
+            return "    vlan-raw-device {}\n".format(self.vlan_parent)
         else:
             return ""
+
 
 class BridgeOpts:
-    def __init__(self, bridge_opts):
-        self._bridge_ports = bridge_opts.get("bridge_ports", [])
-        self._bridge_stp = bridge_opts.get("bridge_stp", "")
-        self._bridge_maxwait = bridge_opts.get("bridge_maxwait", "")
+    """
+    A class for processing bridge interface options.
 
-    @property
-    def bridge_ports(self):
-        return self._bridge_ports
+    Attributes
+    ----------
+    bridge_ports : list
+        slave interfaces to add to bridge
 
-    @property
-    def bridge_stp(self):
-        return self._bridge_stp
+    bridge_stp : str
+        enable or disable spanning tree protocol
 
-    @property
-    def bridge_maxwait(self):
-        return self._bridge_maxwait
-    
+    bridge_maxwait : int
+        max waiting time
+    """
+
+    def __init__(self, data):
+        """
+        The constructor for the BridgeOpts class
+
+        Parameters
+        ----------
+        data : dict
+            dictionary containing interfaces option data specific to an address family
+        """
+        self.bridge_ports = data["bridge_opts"].get("bridge_ports", [])
+        self.bridge_stp = data["bridge_opts"].get("bridge_stp", "")
+        self.bridge_maxwait = data["bridge_opts"].get("bridge_maxwait", "")
+
     def stanza_line(self):
+        """
+        Returns string(s) formatted for an interface stanza wanting to setup a bridge
+        """
         lines = ""
-        if self._bridge_ports:
-            lines += "    {} {}\n".format("bridge_ports", " ".join(self._bridge_ports))
-        if self._bridge_stp != "":
-            lines += "    {} {}\n".format("bridge_stp", self._bridge_stp)
-        if self._bridge_maxwait != "":
-            lines += "    {} {}\n".format("bridge_maxwait", self._bridge_maxwait)
+        if self.bridge_ports:
+            lines += "    {} {}\n".format("bridge_ports", " ".join(self.bridge_ports))
+        if self.bridge_stp != "":
+            lines += "    {} {}\n".format("bridge_stp", self.bridge_stp)
+        if self.bridge_maxwait != "":
+            lines += "    {} {}\n".format("bridge_maxwait", self.bridge_maxwait)
         else:
             return ""
         return lines
+
 
 class WlanOpts:
-    def __init__(self, wlan_opts):
-        self._wpa_driver = wlan_opts.get("wpa-driver", "")
-        self._wpa_roam = wlan_opts.get("wpa-roam", "")
+    """
+    A class for processing wlan interface options.
 
-    @property
-    def wpa_driver(self):
-        return self._wpa_driver
+    Attributes
+    ----------
+    wpa_driver : str
+        wlan driver
 
-    @property
-    def wpa_roam(self):
-        return self._wpa_roam
+    wpa_roam : str
+        enable roaming
+    """
+
+    def __init__(self, data):
+        """
+        The constructor for the WlanOpts class
+
+        Parameters
+        ----------
+        data : dict
+            dictionary containing interfaces option data specific to an address family
+        """
+        self.wpa_driver = data["wlan_opts"].get("wpa-driver", "")
+        self.wpa_roam = data["wlan_opts"].get("wpa-roam", "")
 
     def stanza_line(self):
+        """
+        Returns string(s) formatted for an interface stanza wanting to setup a bridge
+        """
         lines = ""
-        if self._wpa_driver != "":
-            lines += "    {} {}\n".format("wpa-driver", self._wpa_driver)
+        if self.wpa_driver != "":
+            lines += "    {} {}\n".format("wpa-driver", self.wpa_driver)
 
-        if self._wpa_roam != "":
-            lines += "    {} {}\n".format("wpa-roam", self._wpa_roam)
+        if self.wpa_roam != "":
+            lines += "    {} {}\n".format("wpa-roam", self.wpa_roam)
         else:
             return ""
         return lines
 
-class MeaOpts:
-    def __init__(self, mea_opts):
-        self._post_up = mea_opts.get("post-up", [])
 
-    @property
-    def post_up(self):
-        return self._post_up
-    
+class MeaOpts:
+    """
+    A class for processing mea interface options.
+
+    Attributes
+    ----------
+    post_up : list
+        command(s) to run after bringing interface up
+    """
+
+    def __init__(self, data):
+        """
+        The constructor for the MeaOpts class
+
+        Parameters
+        ----------
+        data : dict
+            dictionary containing interfaces option data specific to an address family
+        """
+        self.post_up = data["mea_opts"].get("post-up", [])
+
     def stanza_line(self):
+        """
+        Returns string(s) formatted for an interface stanza wanting to setup a bridge
+        """
         lines = ""
-        if self._post_up:
-            lines += "    {} {}\n".format("post-up", " ".join(self._post_up))
+        if self.post_up:
+            lines += "    {} {}\n".format("post-up", " ".join(self.post_up))
         else:
             return ""
         return lines
 
 
 class IfaceDetails:
-    def __init__(self, data):
-        self.address = IpAddress(data.get("address", ""))
-        self.netmask = IpNetmask(data.get("netmask", ""))
-        self.gateway = IpGateway(data.get("gateway", ""))
-        self.pre_up = PreupOpt(data.get("pre-up", []))
-        self.up = UpOpt(data.get("up", []))
-        self.post_up = PostupOpt(data.get("post-up", []))
-        self.pre_down = PredownOpt(data.get("pre-down", []))
-        self.down = DownOpt(data.get("down", []))
-        self.post_down = PostdownOpt(data.get("post-down", []))
-        self.vlan_opts = VlanOpts(data.get("vlan_opts", {})) 
-        self.bridge_opts = BridgeOpts(data.get("bridge_opts", {}))
-        self.wlan_opts = WlanOpts(data.get("wlan_opts", {}))
-        self.mea_opts = MeaOpts(data.get("mea_opts", {}))
+    """
+    A class for manipulating interface stanza option data.
 
-    def iface_details(self):
+    Attributes
+    ----------
+    opts : list
+        common options present within an interface stanza
+
+    """
+
+    def __init__(self, data):
+        """
+        The constructor for IfaceDetails class.
+
+        Parameters
+        ----------
+        data : dict
+            dictionary containing interfaces option data specific to an address family
+        """
+        self.opts = [
+            AddrOpts(data),
+            IfaceOpts(data),
+            VlanOpts(data),
+            BridgeOpts(data),
+            WlanOpts(data),
+            MeaOpts(data),
+        ]
+
+    def iface_stanza_details(self):
+        """
+        Returns a list containing strings formatted to represent an interface options' respective line(s)
+        in an interface stanza
+        """
         iface_stanza_details = []
 
-        iface_stanza_details.append(self.address.stanza_line())
-        iface_stanza_details.append(self.netmask.stanza_line())
-        iface_stanza_details.append(self.gateway.stanza_line())
-        iface_stanza_details.append(self.pre_up.stanza_line())
-        iface_stanza_details.append(self.up.stanza_line())
-        iface_stanza_details.append(self.post_up.stanza_line())
-        iface_stanza_details.append(self.pre_down.stanza_line())
-        iface_stanza_details.append(self.down.stanza_line())
-        iface_stanza_details.append(self.post_down.stanza_line())
-        iface_stanza_details.append(self.vlan_opts.stanza_line())
-        iface_stanza_details.append(self.bridge_opts.stanza_line())
-        iface_stanza_details.append(self.wlan_opts.stanza_line())
-        iface_stanza_details.append(self.mea_opts.stanza_line())
+        for opt in self.opts:
+            iface_stanza_details.append(opt.stanza_line())
 
         return iface_stanza_details
